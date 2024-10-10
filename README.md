@@ -6,6 +6,8 @@
 
 - [Tempermonkey](https://www.tampermonkey.net/index.php)
 
+如果是mac系統的話請下載[Userscripts](https://apps.apple.com/tw/app/userscripts/id1463298887)
+
 ### 2.安裝腳本
 
 - [SignInBottom](https://greasyfork.org/zh-TW/scripts/512116-signinbottom)
