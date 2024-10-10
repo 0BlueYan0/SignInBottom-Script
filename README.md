@@ -6,7 +6,7 @@
 
 - [Tempermonkey](https://www.tampermonkey.net/index.php)
 
-如果是mac系統的話請下載[Userscripts](https://apps.apple.com/tw/app/userscripts/id1463298887)
+如果是mac系統的話請下載[Userscripts](https://apps.apple.com/tw/app/userscripts/id1463298887)，並搭配safari使用
 
 ### 2.安裝腳本
 
