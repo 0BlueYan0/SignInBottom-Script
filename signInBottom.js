@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SignInBottom
 // @namespace    https://github.com/0BlueYan0
-// @version      1.1
+// @version      1.2
 // @description  Generate a bottom link.
 // @author       0BlueYan0
 // @match        https://ilearn.fcu.edu.tw/course/view.php?id=*
@@ -24,7 +24,7 @@
     }
     
     const className = document.querySelector('#page-header > div.d-sm-flex.align-items-center > div.mr-auto > div > div > h1');
-    let code = className.textContent.split('[')[1].split(']')[0];
+    let code = className.textContent.substring(className.textContent.length - 5, className.textContent.length - 1);
     let year_sms = className.textContent.split(' ')[0];
     
     let payload = {
@@ -34,35 +34,35 @@
             "sms":year_sms.substring(3)
         },
         "typeOptions":{
-            "code":{             // ¿ï½Ò¥N¸¹
+            "code":{             // é¸èª²ä»£è™Ÿ
                 "enabled":"true",
                 "value":code
             },
             "weekPeriod":{
                 "enabled":"false",
-                "week":"*",      // ¬P´Á */1/2/../7
-                "period":"*"     // ¸`¦¸ */0/1/2/../14
+                "week":"*",      // æ˜ŸæœŸ */1/2/../7
+                "period":"*"     // ç¯€æ¬¡ */0/1/2/../14
             },
-            "course":{           // ¬ì¥Ø¦WºÙ
+            "course":{           // ç§‘ç›®åç¨±
                 "enabled":"false",
                 "value":""
             },
-            "teacher":{          // ¶}½Ò±Ð®v©m¦W
+            "teacher":{          // é–‹èª²æ•™å¸«å§“å
                 "enabled":"false",
                 "value":""
             },
-            "useEnglish":{       // ¥þ­^»y±Â½Ò
+            "useEnglish":{       // å…¨è‹±èªžæŽˆèª²
                 "enabled":"false"
             },
-            "useLanguage":{      // ±Â½Ò»y¨¥
+            "useLanguage":{      // æŽˆèª²èªžè¨€
                 "enabled":"false",
-                "value":"01"     // 01¡G¤¤¤å 02¡G­^»y 03¡G¤é»y 04¡G¼w»y 05¡Gªk»y 06¡G¦è¯Z¤ú»y 07¡G¨ä¥L 08¡G¤¤­^
+                "value":"01"     // 01ï¼šä¸­æ–‡ 02ï¼šè‹±èªž 03ï¼šæ—¥èªž 04ï¼šå¾·èªž 05ï¼šæ³•èªž 06ï¼šè¥¿ç­ç‰™èªž 07ï¼šå…¶ä»– 08ï¼šä¸­è‹±
             },
-            "specificSubject":{  // ¯S©w¬ì¥Ø
+            "specificSubject":{  // ç‰¹å®šç§‘ç›®
                 "enabled":"false",
-                "value":"1"      // 1¡G³qÃÑ½Òµ{ 2¡GÅé¨|¿ï¶µ½Òµ{ 3¡G¤j¾Ç°ê¤å
+                "value":"1"      // 1ï¼šé€šè­˜èª²ç¨‹ 2ï¼šé«”è‚²é¸é …èª²ç¨‹ 3ï¼šå¤§å­¸åœ‹æ–‡
             },
-            "courseDescription":{// ½Òµ{´y­z
+            "courseDescription":{// èª²ç¨‹æè¿°
                 "enabled":"false",
                 "value":""
             }
@@ -88,7 +88,7 @@
             cls_id = cls_id.substring(0, cls_id.length - 1) + '9';
         }
     
-        sub_id = jsonData.items[0].sub_id;
+        sub_id = jsonData.items['0'].sub_id;
         scr_dup = jsonData.items['0'].scr_dup;
         sub_id3 = jsonData.items['0'].sub_id3;
     
@@ -112,7 +112,7 @@
         i.setAttribute('class', 'icon fa fa-map-marker fa-fw icon');
         i.setAttribute('aria-hidden', 'true');
         a.appendChild(i);
-        a.innerHTML += 'ÂI¦W';
+        a.innerHTML += 'é»žå';
     
         const reference = document.querySelector('#inst36323 > div > div > ul > li:nth-child(6)');
     
