@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         SignInBottom
 // @namespace    https://github.com/0BlueYan0
-// @version      1.3.1
+// @version      1.3.2
 // @description  Generate a bottom link.
 // @author       0BlueYan0
 // @match        https://ilearn.fcu.edu.tw/course/view.php?id=*
-// @connect      https://coursesearch03.fcu.edu.tw/Service/Search.asmx/GetType2Result
+// @connect      coursesearch03.fcu.edu.tw
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
