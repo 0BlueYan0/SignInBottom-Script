@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         SignInBottom
 // @namespace    https://github.com/0BlueYan0
-// @version      1.2
+// @version      1.3
 // @description  Generate a bottom link.
 // @author       0BlueYan0
 // @match        https://ilearn.fcu.edu.tw/course/view.php?id=*
-// @grant        none
+// @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @license      MIT
 // @downloadURL  https://update.greasyfork.org/scripts/512116/SignInBottom.user.js
 // @updateURL    https://update.greasyfork.org/scripts/512116/SignInBottom.meta.js
@@ -23,6 +25,14 @@
         "user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3573.0 Safari/537.36",
     }
     
+    let currentUrl = window.location.href;
+    const Link = GM_getValue(currentUrl, false);
+    if(Link !== false){
+        createBottom(Link);
+        console.log("get success")
+        return;
+    }
+
     const className = document.querySelector('#page-header > div.d-sm-flex.align-items-center > div.mr-auto > div > div > h1');
     let code = className.textContent.substring(className.textContent.length - 5, className.textContent.length - 1);
     let year_sms = className.textContent.split(' ')[0];
@@ -69,54 +79,112 @@
         }
     }
     
-    let url = 'https://cors-anywhere.herokuapp.com/https://coursesearch03.fcu.edu.tw/Service/Search.asmx/GetType2Result';
+    let url = 'https://coursesearch03.fcu.edu.tw/Service/Search.asmx/GetType2Result';
     var cls_id = "", total = 0, sub_id = "", scr_dup = "", sub_id3="";
-    fetch(url,{
-        method: 'POST',
+
+    GM_xmlhttpRequest({
+        method: "POST",
+        url: url,
         headers: headers,
-        body: JSON.stringify(payload)
-    }).then(response => response.text()).then(data => {
-        data.replace('\\"','"' );
-        data.replace(':"{',': {' );
-        data.replace('}]}"}','}]}}');
-        const jsonData = JSON.parse(data);
-    
-        total = jsonData.total;
-        cls_id = jsonData.items['0'].cls_id;
-    
-        if(total > 1){
-            cls_id = cls_id.substring(0, cls_id.length - 1) + '9';
+        data: JSON.stringify(payload),
+        onload: function(response) {
+            let data = response.responseText;
+            data.replace('\\"','"' );
+            data.replace(':"{',': {' );
+            data.replace('}]}"}','}]}}');
+            const jsonData = JSON.parse(data);
+        
+            total = jsonData.total;
+            cls_id = jsonData.items['0'].cls_id;
+        
+            if(total > 1){
+                cls_id = cls_id.substring(0, cls_id.length - 1) + '9';
+            }
+        
+            sub_id = jsonData.items['0'].sub_id;
+            scr_dup = jsonData.items['0'].scr_dup;
+            sub_id3 = jsonData.items['0'].sub_id3;
+        
+            const signInLink = "https://ilearn.fcu.edu.tw/apps/apps_sso.php?course="+ year_sms + cls_id + sub_id + scr_dup + sub_id3 +"&log_app=03D&log_lang=tw&log_block=FCU%E8%AA%B2%E5%8B%99%E5%B7%A5%E5%85%B7&sys_name=%E9%BB%9E%E5%90%8D";
+        
+            createBottom(signInLink);
+            GM_setValue(currentUrl, signInLink);
+            console.log("set success")
         }
-    
-        sub_id = jsonData.items['0'].sub_id;
-        scr_dup = jsonData.items['0'].scr_dup;
-        sub_id3 = jsonData.items['0'].sub_id3;
-    
-        const signInLink = "https://ilearn.fcu.edu.tw/apps/apps_sso.php?course="+ year_sms + cls_id + sub_id + scr_dup + sub_id3 +"&log_app=03D&log_lang=tw&log_block=FCU%E8%AA%B2%E5%8B%99%E5%B7%A5%E5%85%B7&sys_name=%E9%BB%9E%E5%90%8D";
-    
-        const ul = document.querySelector('#inst36323 > div > div > ul');
-    
-        const li = document.createElement('li');
-        li.classList.add('new-li');
-    
-        const c1 = document.createElement('div');
-        c1.classList.add('new-column-c1');
-        li.appendChild(c1);
-    
-        const a = document.createElement('a');
-        a.target = '_blank';
-        a.href = signInLink;
-        c1.appendChild(a);
-    
-        const i = document.createElement('i');
-        i.setAttribute('class', 'icon fa fa-map-marker fa-fw icon');
-        i.setAttribute('aria-hidden', 'true');
-        a.appendChild(i);
-        a.innerHTML += '點名';
-    
-        const reference = document.querySelector('#inst36323 > div > div > ul > li:nth-child(6)');
-    
-        ul.insertBefore(li, reference);
     });
+
+    function createBottom(signInLink) {
+        const ul = document.querySelector('#inst36323 > div > div > ul');
+        
+            const li = document.createElement('li');
+            li.setAttribute('class', 'r1');
+        
+            const c1 = document.createElement('div');
+            c1.setAttribute('class', 'column c1');
+            li.appendChild(c1);
+        
+            const a = document.createElement('a');
+            a.target = '_blank';
+            a.href = signInLink;
+            c1.appendChild(a);
+        
+            const i = document.createElement('i');
+            i.setAttribute('class', 'icon fa fa-map-marker fa-fw icon');
+            i.setAttribute('aria-hidden', 'true');
+            a.appendChild(i);
+            a.innerHTML += '點名';
+        
+            const reference = document.querySelector('#inst36323 > div > div > ul > li:nth-child(6)');
+        
+            ul.insertBefore(li, reference);
+    }
+
+    // fetch(url,{
+    //     method: 'POST',
+    //     headers: headers,
+    //     body: JSON.stringify(payload)
+    // }).then(response => response.text()).then(data => {
+    //     data.replace('\\"','"' );
+    //     data.replace(':"{',': {' );
+    //     data.replace('}]}"}','}]}}');
+    //     const jsonData = JSON.parse(data);
+    
+    //     total = jsonData.total;
+    //     cls_id = jsonData.items['0'].cls_id;
+    
+    //     if(total > 1){
+    //         cls_id = cls_id.substring(0, cls_id.length - 1) + '9';
+    //     }
+    
+    //     sub_id = jsonData.items['0'].sub_id;
+    //     scr_dup = jsonData.items['0'].scr_dup;
+    //     sub_id3 = jsonData.items['0'].sub_id3;
+    
+    //     const signInLink = "https://ilearn.fcu.edu.tw/apps/apps_sso.php?course="+ year_sms + cls_id + sub_id + scr_dup + sub_id3 +"&log_app=03D&log_lang=tw&log_block=FCU%E8%AA%B2%E5%8B%99%E5%B7%A5%E5%85%B7&sys_name=%E9%BB%9E%E5%90%8D";
+    
+    //     const ul = document.querySelector('#inst36323 > div > div > ul');
+    
+    //     const li = document.createElement('li');
+    //     li.classList.add('new-li');
+    
+    //     const c1 = document.createElement('div');
+    //     c1.classList.add('new-column-c1');
+    //     li.appendChild(c1);
+    
+    //     const a = document.createElement('a');
+    //     a.target = '_blank';
+    //     a.href = signInLink;
+    //     c1.appendChild(a);
+    
+    //     const i = document.createElement('i');
+    //     i.setAttribute('class', 'icon fa fa-map-marker fa-fw icon');
+    //     i.setAttribute('aria-hidden', 'true');
+    //     a.appendChild(i);
+    //     a.innerHTML += '點名';
+    
+    //     const reference = document.querySelector('#inst36323 > div > div > ul > li:nth-child(6)');
+    
+    //     ul.insertBefore(li, reference);
+    // });
     
 })();
