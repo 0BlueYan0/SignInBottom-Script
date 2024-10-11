@@ -18,8 +18,5 @@
 
 ## 常見問題
 
-1.如果沒有出現新按鈕的話，前往此[網頁](https://cors-anywhere.herokuapp.com/https://coursesearch03.fcu.edu.tw/Service/Search.asmx/GetType2Result)，並按下下圖中的按鈕，之後再重新刷新網頁應該就可以正常出現了
-![image](https://github.com/user-attachments/assets/639e4baf-5ef0-4f7f-9e49-8b4f64ae9c01)
-
-2.如果是使用chrome-base的瀏覽器的話，記得一定要去下圖的擴充功能頁面打開開發人員模式
+1.如果是使用chrome-base的瀏覽器的話，記得一定要去下圖的擴充功能頁面打開開發人員模式
 ![image](https://github.com/user-attachments/assets/b628359d-7671-402e-a6b9-d01827927338)
