@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SignInBottom
 // @namespace    https://github.com/0BlueYan0
-// @version      1.3.2
+// @version      1.4.1
 // @description  Generate a bottom link.
 // @author       0BlueYan0
 // @match        https://ilearn.fcu.edu.tw/course/view.php?id=*
@@ -9,6 +9,7 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @inject-into  content
 // @license      MIT
 // @downloadURL  https://update.greasyfork.org/scripts/512116/SignInBottom.user.js
 // @updateURL    https://update.greasyfork.org/scripts/512116/SignInBottom.meta.js
@@ -26,12 +27,26 @@
         "user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3573.0 Safari/537.36",
     }
     
+    const userAgent = navigator.userAgent;
+    let safari = false;
     let currentUrl = window.location.href;
-    const Link = GM_getValue(currentUrl, false);
-    if(Link !== false){
-        createBottom(Link);
-        console.log("get success")
-        return;
+
+    if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
+        console.log('使用的是 Safari 瀏覽器');
+        safari = true;
+        const Link = localStorage.getItem(currentUrl);
+        if(Link !== null){
+            createBottom(Link);
+            console.log("get success")
+            return;
+        }
+    }else {
+        const Link = GM_getValue(currentUrl, false);
+        if(Link !== false){
+            createBottom(Link);
+            console.log("get success")
+            return;
+        }
     }
 
     const className = document.querySelector('#page-header > div.d-sm-flex.align-items-center > div.mr-auto > div > div > h1');
@@ -109,7 +124,11 @@
             const signInLink = "https://ilearn.fcu.edu.tw/apps/apps_sso.php?course="+ year_sms + cls_id + sub_id + scr_dup + sub_id3 +"&log_app=03D&log_lang=tw&log_block=FCU%E8%AA%B2%E5%8B%99%E5%B7%A5%E5%85%B7&sys_name=%E9%BB%9E%E5%90%8D";
         
             createBottom(signInLink);
-            GM_setValue(currentUrl, signInLink);
+            if(safari === false) {
+                GM_setValue(currentUrl, signInLink);
+            }else {
+                localStorage.setItem(currentUrl, signInLink);
+            }
             console.log("set success")
         }
     });
